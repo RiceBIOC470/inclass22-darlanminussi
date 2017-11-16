@@ -41,24 +41,20 @@ colors_p2 = ['r-' 'g-' 'b-' 'm-' 'c-' 'k-' 'm-'];
 
 x0_p2 = 2;
 
-kb_p2 = 1:7;
-ku = 0;
-legendInfo = {};
+kb_p2 = 1
+; ku = 0;
+
 figure;
 hold on;
-for ii = 1:numel(kb_p2)
+for ii = 1:numel(x0)
 
-rhs = @(t,x) (ku+kb_p2(ii)*x.^2)./(1+x.^2)-x;
-sol = ode23(rhs, [0 10], x0_p2);
+rhs = @(t,x) (ku+kb*x.^2)./(1+x.^2)-x;
+sol = ode23(rhs, [0 10], x0(ii));
 plot(sol.x, sol.y, colors_p1(ii),'LineWidth', 3, 'MarkerSize', 18);
 xlabel('Time'); ylabel('Expression');
 set(gca,'FontSize', 24); ylim([0 8]);
-legendInfo{ii} = ['Number of factors: ' num2str(colors_p2(ii))];
-end
+legendInfo{ii} = ['Number of factors: ' num2str(x0(ii))];
+    end
 
 legend(legendInfo);
 hold off;
-
-% it's possible to see that for kb = 1 and ku = 0 with an initial number of
-% copies of 2 transcripts is the condition needed to complete turn off the
-% gene expression.
