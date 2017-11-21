@@ -6,59 +6,73 @@
 %transcripton factor are necessary to activate transciption. Comment on your
 %results. 
 
+% x3-kbx2+x-ku=0
+
 colors_p1 = ['r-' 'g-' 'b-'];
+n = [1 4 8];
 
-x0 = [1 4 8];
+ku = 0;
 
-kb = 3; ku = 0;
+% 1 copy
 
 figure;
 hold on;
-for ii = 1:numel(x0)
+for kb = 0:0.05:5
+polycoeff = [1 -kb -ku];
+rts = roots(polycoeff);
+rts = rts(imag(rts) == 0);
+plot(kb*ones(length(rts),1),rts, 'r.');
+end
 
-rhs = @(t,x) (ku+kb*x.^2)./(1+x.^2)-x;
-sol = ode23(rhs, [0 10], x0(ii));
-plot(sol.x, sol.y, colors_p1(ii),'LineWidth', 3, 'MarkerSize', 18);
-xlabel('Time'); ylabel('Expression');
-set(gca,'FontSize', 24); ylim([0 8]);
-legendInfo{ii} = ['Number of factors: ' num2str(x0(ii))];
-    end
-
-legend(legendInfo);
+xlabel('k_b'); ylabel('Fixed points');
 hold off;
 
-% All different values converge to stable expression at 2.5.
-% Initial value 1 increases its production until 2.5 on timepoint ~ 6
-% whereas initial value 4 and 8 decreases their production with inital
-% value 4 reaching the stable expression point before initial value 8
+% 4 copies
 
+figure;
+hold on;
+for kb = 0:0.05:5
+polycoeff = [1 -kb 1 0 -ku];
+rts = roots(polycoeff);
+rts = rts(imag(rts) == 0);
+plot(kb*ones(length(rts),1),rts, 'r.');
+end
+
+xlabel('k_b'); ylabel('Fixed points');
+hold off;
+
+% 8 copies
+figure;
+hold on;
+for kb = 0:0.05:5
+polycoeff = [1 -kb 1 0 0 0 0 0 -ku];
+rts = roots(polycoeff);
+rts = rts(imag(rts) == 0);
+plot(kb*ones(length(rts),1),rts, 'r.');
+end
+
+xlabel('k_b'); ylabel('Fixed points');
+hold off;
+
+
+
+% transcription with only 1 copy doesn't activate due to the necessity of
+% two copies for activation, 4 copies and 8 copies it's possible to see the
+% saddle node bifurcation.
 
 % 2. Make a similar diagram for the case of an autorepressing gene in the
 % case that 2 copies are need to turn off the gene. 
 
 
-colors_p2 = ['r-' 'g-' 'b-' 'm-' 'c-' 'k-' 'm-'];
-
-x0_p2 = 2;
-
-kb_p2 = 1:7;
-ku = 0;
-legendInfo = {};
 figure;
 hold on;
-for ii = 1:numel(kb_p2)
-
-rhs = @(t,x) (ku+kb_p2(ii)*x.^2)./(1+x.^2)-x;
-sol = ode23(rhs, [0 10], x0_p2);
-plot(sol.x, sol.y, colors_p1(ii),'LineWidth', 3, 'MarkerSize', 18);
-xlabel('Time'); ylabel('Expression');
-set(gca,'FontSize', 24); ylim([0 8]);
-legendInfo{ii} = ['Number of factors: ' num2str(colors_p2(ii))];
+for kb = 0:0.05:5
+polycoeff = [1 +kb 1 -ku];
+rts = roots(polycoeff);
+rts = rts(imag(rts) == 0);
+plot(kb*ones(length(rts),1),rts, 'r.');
 end
 
-legend(legendInfo);
+xlabel('k_b'); ylabel('Fixed points');
 hold off;
 
-% it's possible to see that for kb = 1 and ku = 0 with an initial number of
-% copies of 2 transcripts is the condition needed to complete turn off the
-% gene expression.
